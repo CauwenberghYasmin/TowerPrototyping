@@ -23,6 +23,7 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float turnResponse = 4f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float gravityMultiplier = 0.5f;
 
     [Header("Ground Check")]
     [SerializeField] private float groundCheckOffset = 0.1f;
@@ -68,7 +69,10 @@ public class PlayerControllerScript : MonoBehaviour
 
     void SlideMovement()
     {
-        _verticalVelocity += gravity * (0.5f) * Time.deltaTime;
+        _verticalVelocity += (gravity / gravityMultiplier) * Time.deltaTime;
+        
+      
+
  
         Vector3 moveDir = playerRotation.GetMoveDirection(_moveInput);
         Vector3 inputDir = Vector3.ProjectOnPlane(moveDir, _groundNormal).normalized;
@@ -92,8 +96,13 @@ public class PlayerControllerScript : MonoBehaviour
         {
             velocity = _horizontalVelocity + Vector3.down * 0.1f;
             velocity.y += _verticalVelocity;
+            Debug.Log("is grounded!");
         }
-        else { velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z); }
+        else 
+        { 
+            velocity = new Vector3(_horizontalVelocity.x, _verticalVelocity, _horizontalVelocity.z);
+            Debug.Log("is NOT grounded!");
+        }
  
         _controller.Move(velocity * Time.deltaTime);
     }
@@ -101,13 +110,18 @@ public class PlayerControllerScript : MonoBehaviour
     
     void CheckGround()
     {
-        Vector3 origin = transform.position + Vector3.up * 0.1f;
+        Vector3 origin = transform.position + (Vector3.up);
+
         _isGrounded = Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
-            out RaycastHit hitInfo, groundCheckOffset, groundMask);
+            out RaycastHit hitInfo, groundCheckOffset);
  
         _groundNormal = _isGrounded ? hitInfo.normal : Vector3.up;
  
-        if (_isGrounded && _verticalVelocity < 0f) { _verticalVelocity = groundedStickForce; }
+        if (_isGrounded && _verticalVelocity < 0f) 
+        { 
+            _verticalVelocity = groundedStickForce;
+            Debug.Log("Calling reset!");
+        }
     }
     
     
