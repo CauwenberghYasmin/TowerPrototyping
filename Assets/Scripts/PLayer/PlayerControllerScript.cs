@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
@@ -28,7 +29,8 @@ public class PlayerControllerScript : MonoBehaviour
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 5f;
-
+    private int currJumpCount = 0;
+    private const int maxJumpAMount = 2;
 
     [Header("Ground Check")]
     [SerializeField] private float groundCheckOffset = 0.1f;
@@ -101,6 +103,8 @@ public class PlayerControllerScript : MonoBehaviour
             velocity = _horizontalVelocity + Vector3.down * 0.1f;
             velocity.y += _verticalVelocity;
             Debug.Log("is grounded!");
+
+            currJumpCount = 0;
         }
         else 
         { 
@@ -163,10 +167,12 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void OnJumpPerformed(InputAction.CallbackContext ctx)
     {
-        if (_isGrounded)
+        if (_isGrounded || currJumpCount < (maxJumpAMount -1))
         {
             float effectiveGravity = gravity / gravityMultiplier;
             _verticalVelocity = Mathf.Sqrt( -2f * jumpHeight* effectiveGravity); //physics fomrula 
+
+            ++currJumpCount;
         }
     }
 }
