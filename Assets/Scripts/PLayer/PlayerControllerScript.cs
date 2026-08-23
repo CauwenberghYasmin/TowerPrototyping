@@ -25,6 +25,11 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 0.5f;
 
+
+    [Header("Jumping")]
+    [SerializeField] private float jumpHeight = 5f;
+
+
     [Header("Ground Check")]
     [SerializeField] private float groundCheckOffset = 0.1f;
     [SerializeField] private float groundCheckRadius = 0.2f;
@@ -62,7 +67,6 @@ public class PlayerControllerScript : MonoBehaviour
     {
         CheckGround();
         SlideMovement();
-
     }
 
 
@@ -105,6 +109,11 @@ public class PlayerControllerScript : MonoBehaviour
         }
  
         _controller.Move(velocity * Time.deltaTime);
+
+
+
+
+
     }
 
     
@@ -132,6 +141,8 @@ public class PlayerControllerScript : MonoBehaviour
         _moveAction.performed += OnMovePerformed;
         _moveAction.canceled += OnMoveCanceled;
 
+        _jumpAction.Enable();
+        _jumpAction.performed += OnJumpPerformed;
     }
 
     private void OnDisable()
@@ -140,10 +151,22 @@ public class PlayerControllerScript : MonoBehaviour
         _moveAction.canceled -= OnMoveCanceled;
         _moveAction.Disable();
 
+        _jumpAction.performed -= OnJumpPerformed;
+        _jumpAction.Disable();
+
     }
 
     private void OnMovePerformed(InputAction.CallbackContext ctx) => _moveInput = ctx.ReadValue<Vector2>();
     private void OnMoveCanceled(InputAction.CallbackContext ctx) => _moveInput = Vector2.zero;
 
 
+
+    private void OnJumpPerformed(InputAction.CallbackContext ctx)
+    {
+        if (_isGrounded)
+        {
+            float effectiveGravity = gravity / gravityMultiplier;
+            _verticalVelocity = Mathf.Sqrt( -2f * jumpHeight* effectiveGravity); //physics fomrula 
+        }
+    }
 }
