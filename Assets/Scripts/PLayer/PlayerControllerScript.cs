@@ -13,6 +13,7 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private InputActionAsset inputActions;
     [SerializeField] private string actionMapName = "Player";
     [SerializeField] private string moveActionName = "Move";
+    [SerializeField] private string jumpActionName = "Jump";
 
     
     [Header("Movement")]
@@ -33,6 +34,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     private CharacterController _controller;
     private InputAction _moveAction;
+    private InputAction _jumpAction;
     private Vector2 _moveInput;
     private bool _isGrounded;
     private float _verticalVelocity;
@@ -44,6 +46,7 @@ public class PlayerControllerScript : MonoBehaviour
 
         var map = inputActions.FindActionMap(actionMapName);
         _moveAction = map.FindAction(moveActionName);
+        _jumpAction = map.FindAction(jumpActionName);
 
     }
     
@@ -65,7 +68,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     void SlideMovement()
     {
-        _verticalVelocity += gravity * Time.deltaTime;
+        _verticalVelocity += gravity * (0.5f) * Time.deltaTime;
  
         Vector3 moveDir = playerRotation.GetMoveDirection(_moveInput);
         Vector3 inputDir = Vector3.ProjectOnPlane(moveDir, _groundNormal).normalized;
