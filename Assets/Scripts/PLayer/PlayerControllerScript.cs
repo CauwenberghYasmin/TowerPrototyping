@@ -6,6 +6,13 @@ using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
+enum PlayerState
+{
+    Falling,
+    Grounded,
+    Wallrunning
+};
+
 [RequireComponent(typeof(CharacterController))]
 public class PlayerControllerScript : MonoBehaviour
 {
@@ -54,7 +61,8 @@ public class PlayerControllerScript : MonoBehaviour
     private bool _isGrounded;
     private float _verticalVelocity;
     private Vector3 _horizontalVelocity;
-    
+
+    private PlayerState _playerState;
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -147,7 +155,7 @@ public class PlayerControllerScript : MonoBehaviour
         Vector3 origin = transform.position + (Vector3.up);
 
         _isGrounded = Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
-            out RaycastHit hitInfo, groundCheckOffset);
+            out RaycastHit hitInfo, groundCheckOffset, groundMask);
 
 
         if (_isGrounded)
