@@ -78,8 +78,6 @@ public class PlayerControllerScript : MonoBehaviour
         _verticalVelocity += (gravity / gravityMultiplier) * Time.deltaTime;
         
       
-
- 
         Vector3 moveDir = playerRotation.GetMoveDirection(_moveInput);
         Vector3 inputDir = Vector3.ProjectOnPlane(moveDir, _groundNormal).normalized;
  
