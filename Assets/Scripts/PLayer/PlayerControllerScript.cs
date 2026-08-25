@@ -1,4 +1,6 @@
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
@@ -18,13 +20,18 @@ public class PlayerControllerScript : MonoBehaviour
 
     
     [Header("Movement")]
-    [SerializeField] private float maxSpeed = 8f;
+    [SerializeField] private float currMaxSpeed = 8f;
     [SerializeField] private float accel = 12f;  
     [SerializeField] private float decel = 2f;   
     [SerializeField] private float turnResponse = 4f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 0.5f;
+
+    [SerializeField] private float minMaxSpeed = 10;
+    [SerializeField] private float maxMaxSpeed = 14;
+
+    [SerializeField] private float steepnessRequirementSpeed = 0.5f;
 
 
     [Header("Jumping")]
@@ -68,15 +75,35 @@ public class PlayerControllerScript : MonoBehaviour
     private void Update()
     {
         CheckGround();
+        CalculateMaxSpeed();
         SlideMovement();
     }
 
+
+    void CalculateMaxSpeed()
+    {
+
+        //take nromal char and floor normal -> take dot
+        //if number > 0.5 or <-0.5 -> make max speed faster!!
+
+        float dotResult = Vector3.Dot(_groundNormal, Vector3.down);
+        Debug.Log("Dot RESULT: " + dotResult);
+
+
+        if (dotResult > steepnessRequirementSpeed || dotResult < -steepnessRequirementSpeed) //if player speeding over slanted floor it can gain more speed!
+        {
+            currMaxSpeed = maxMaxSpeed;
+        }
+        else
+        {
+            currMaxSpeed = minMaxSpeed;
+        }
+    }
 
 
     void SlideMovement()
     {
         _verticalVelocity += (gravity / gravityMultiplier) * Time.deltaTime;
-        
       
         Vector3 moveDir = playerRotation.GetMoveDirection(_moveInput);
         Vector3 inputDir = Vector3.ProjectOnPlane(moveDir, _groundNormal).normalized;
@@ -84,7 +111,7 @@ public class PlayerControllerScript : MonoBehaviour
 
         if (_moveInput.sqrMagnitude > 0.0001f)
         {
-            Vector3 targetVelocity = inputDir * maxSpeed;
+            Vector3 targetVelocity = inputDir * currMaxSpeed;
             _horizontalVelocity = Vector3.Lerp(_horizontalVelocity, targetVelocity, turnResponse * Time.deltaTime);
             _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, accel * Time.deltaTime);
         }
@@ -93,6 +120,7 @@ public class PlayerControllerScript : MonoBehaviour
             _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, Vector3.zero, decel * Time.deltaTime);
         }
         
+
         _horizontalVelocity = Vector3.ProjectOnPlane(_horizontalVelocity, _groundNormal);
  
         Vector3 velocity;
@@ -111,11 +139,6 @@ public class PlayerControllerScript : MonoBehaviour
         }
  
         _controller.Move(velocity * Time.deltaTime);
-
-
-
-
-
     }
 
     
@@ -125,9 +148,18 @@ public class PlayerControllerScript : MonoBehaviour
 
         _isGrounded = Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
             out RaycastHit hitInfo, groundCheckOffset);
- 
-        _groundNormal = _isGrounded ? hitInfo.normal : Vector3.up;
- 
+
+
+        if (_isGrounded)
+        {
+            _groundNormal = hitInfo.normal;
+        }
+        else
+        {
+            _groundNormal = Vector3.up;
+        }
+
+
         if (_isGrounded && _verticalVelocity < 0f) 
         { 
             _verticalVelocity = groundedStickForce;
