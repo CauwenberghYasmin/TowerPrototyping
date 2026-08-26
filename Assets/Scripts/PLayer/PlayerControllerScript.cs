@@ -18,6 +18,7 @@ public class PlayerControllerScript : MonoBehaviour
 {
     [Header("Dependencies")]
     [SerializeField] private PlayerRotation playerRotation;
+    public PlayerRotation PlayerRotation { get { return playerRotation; } }
     
     [Header("Input")]
     [SerializeField] private InputActionAsset inputActions;
@@ -55,7 +56,10 @@ public class PlayerControllerScript : MonoBehaviour
 
 
     private CharacterController _controller;
+    public CharacterController Controller { get { return _controller; } }
+
     private InputAction _moveAction;
+    public InputAction MoveAction { get { return _moveAction; } }
     private InputAction _jumpAction;
     private Vector2 _moveInput;
     private bool _isGrounded;
@@ -70,9 +74,7 @@ public class PlayerControllerScript : MonoBehaviour
         var map = inputActions.FindActionMap(actionMapName);
         _moveAction = map.FindAction(moveActionName);
         _jumpAction = map.FindAction(jumpActionName);
-
     }
-    
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
