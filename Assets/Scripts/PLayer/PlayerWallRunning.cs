@@ -57,5 +57,21 @@ public class PlayerWallRunning : MonoBehaviour
     private void StateMachine()
     {
         Vector2 moveInput = _playerControllerScript.MoveAction.ReadValue<Vector2>();
+
+        //if we're hitting a wall on either side AND we're trying to move forward (pressing W/moving joystick forward) 
+        if((_rightWallHit || _leftWallHit) && moveInput.y > 0)
+        {
+            //start wallrunning
+        }
+    }
+
+    private void StartWallRunning()
+    {
+
+    }
+
+    private void StopWallRunning()
+    {
+
     }
 }

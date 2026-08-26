@@ -713,6 +713,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1285311626328240849, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
       insertIndex: -1
       addedObject: {fileID: 645429106}
+    - targetCorrespondingSourceObject: {fileID: 1285311626328240849, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 645429109}
+    - targetCorrespondingSourceObject: {fileID: 1285311626328240849, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 645429111}
   m_SourcePrefab: {fileID: 100100000, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
 --- !u!1 &330585543
 GameObject:
@@ -1890,7 +1896,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645429104}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d1af1b2e225c644abb838033843f104, type: 3}
   m_Name: 
@@ -1942,6 +1948,47 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &645429109
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645429104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa09a7aa7e1e1ab4c88fc70326f8ff4d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
+  _moveSpeed: 30
+  _input: {fileID: -944628639613478452, guid: 9bfec7acf202c5f4d8af15e068f2dab8, type: 3}
+--- !u!54 &645429111
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645429104}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 80
+  m_CollisionDetection: 1
 --- !u!1 &665816926
 GameObject:
   m_ObjectHideFlags: 0
