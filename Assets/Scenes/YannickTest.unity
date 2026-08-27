@@ -229,8 +229,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.244702, y: 1.17, z: 1.0000002}
-  m_Center: {x: 0.12645411, y: 0, z: -0.000000081444746}
+  m_Size: {x: 1, y: 1, z: 1.0000001}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -733,9 +733,33 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1916638715585051570, guid: 57092f9334827d445af25d0934755776, type: 3}
+      propertyPath: _jumpForce
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916638715585051570, guid: 57092f9334827d445af25d0934755776, type: 3}
+      propertyPath: _groundDrag
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916638715585051570, guid: 57092f9334827d445af25d0934755776, type: 3}
       propertyPath: _cameraTarget
       value: 
       objectReference: {fileID: 881773554655471374}
+    - target: {fileID: 1916638715585051570, guid: 57092f9334827d445af25d0934755776, type: 3}
+      propertyPath: _jumpCooldown
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916638715585051570, guid: 57092f9334827d445af25d0934755776, type: 3}
+      propertyPath: _playerHeight
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916638715585051570, guid: 57092f9334827d445af25d0934755776, type: 3}
+      propertyPath: _airMultiplier
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1916638715585051570, guid: 57092f9334827d445af25d0934755776, type: 3}
+      propertyPath: _groundLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 4239875640545128375, guid: 57092f9334827d445af25d0934755776, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1
