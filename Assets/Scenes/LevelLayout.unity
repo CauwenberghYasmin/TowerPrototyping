@@ -1744,7 +1744,7 @@ Transform:
   m_GameObject: {fileID: 599709203}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.29199976, z: 0.552}
+  m_LocalPosition: {x: 0, y: 0.092999876, z: -0.513}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1974,9 +1974,10 @@ MonoBehaviour:
   moveSpeed: 5
   gravity: -9.81
   gravityMultiplier: 0.3
-  minMaxSpeed: 10
-  maxMaxSpeed: 14
-  minHeightDiff: 1
+  minminSpeed: 6
+  averageSpeedSpeed: 10
+  speedMulitplier: 2
+  minHeightDiff: 0.1
   frontPointTransform: {fileID: 905187791}
   backPointTransform: {fileID: 599709204}
   jumpHeight: 4
@@ -3024,7 +3025,7 @@ Transform:
   m_GameObject: {fileID: 905187790}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.292, z: -0.517}
+  m_LocalPosition: {x: 0, y: 0.093, z: 0.518}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

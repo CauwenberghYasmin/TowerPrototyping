@@ -37,7 +37,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     [SerializeField] private float minminSpeed = 6;
     [SerializeField] private float averageSpeedSpeed = 10;
-    [SerializeField] private float maxMaxSpeed = 14;
+    [SerializeField] private float speedMulitplier = 14;
 
     [SerializeField] private float minHeightDiff = 1;
     [SerializeField] private Transform frontPointTransform;
@@ -118,7 +118,7 @@ public class PlayerControllerScript : MonoBehaviour
         else if (heightDifference > minHeightDiff && _isGrounded) //pos so slope downwards
         {
             targetDirection = Vector3.forward;
-            currMaxSpeed = maxMaxSpeed;
+            currMaxSpeed += speedMulitplier * Time.deltaTime;
             Debug.Log("slope2!");
         }
         else
