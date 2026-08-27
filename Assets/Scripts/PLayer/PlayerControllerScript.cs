@@ -36,10 +36,13 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 0.5f;
 
-    [SerializeField] private float minMaxSpeed = 10;
-    [SerializeField] private float maxMaxSpeed = 14;
+    [SerializeField] private float minminSpeed = 6;
+    [SerializeField] private float averageSpeedSpeed = 10;
+    [SerializeField] private float speedMulitplier = 14;
 
-    [SerializeField] private float steepnessRequirementSpeed = 0.5f;
+    [SerializeField] private float minHeightDiff = 1;
+    [SerializeField] private Transform frontPointTransform;
+    [SerializeField] private Transform backPointTransform;
 
 
     [Header("Jumping")]
@@ -65,6 +68,7 @@ public class PlayerControllerScript : MonoBehaviour
     private bool _isGrounded;
     private float _verticalVelocity;
     private Vector3 _horizontalVelocity;
+    private Vector3 targetDirection = Vector3.zero;
 
     private PlayerState _playerState;
     private void Awake()
@@ -85,30 +89,50 @@ public class PlayerControllerScript : MonoBehaviour
     private void Update()
     {
         CheckGround();
-        CalculateMaxSpeed();
+        CalculateMaxSpeedAndSlope();
         SlideMovement();
     }
 
 
-    void CalculateMaxSpeed()
+    void CalculateMaxSpeedAndSlope()
     {
-
-        //take nromal char and floor normal -> take dot
-        //if number > 0.5 or <-0.5 -> make max speed faster!!
-
-        float dotResult = Vector3.Dot(_groundNormal, Vector3.down);
-        Debug.Log("Dot RESULT: " + dotResult);
+        Vector3 origin = frontPointTransform.position + (Vector3.up);
+        Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
+            out RaycastHit hitInfo, groundCheckOffset+20, groundMask);
 
 
-        if (dotResult > steepnessRequirementSpeed || dotResult < -steepnessRequirementSpeed) //if player speeding over slanted floor it can gain more speed!
+        float frontPointDistance = hitInfo.distance;
+
+        origin = backPointTransform.position + (Vector3.up);
+        Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
+            out RaycastHit hitInfo2, groundCheckOffset+20, groundMask);
+
+        float backPOintDistance = hitInfo2.distance;
+        double heightDifference = frontPointDistance - backPOintDistance;
+
+        if (heightDifference < -minHeightDiff && _isGrounded) //negative so slope upwards (char tryin to go up?)
         {
-            currMaxSpeed = maxMaxSpeed;
+            targetDirection = Vector3.back;
+            currMaxSpeed = minminSpeed; //trying to skate upwards should be slower!
+
+            Debug.Log("slope!");
+        }
+        else if (heightDifference > minHeightDiff && _isGrounded) //pos so slope downwards
+        {
+            targetDirection = Vector3.forward;
+            currMaxSpeed += speedMulitplier * Time.deltaTime;
+            Debug.Log("slope2!");
         }
         else
         {
-            currMaxSpeed = minMaxSpeed;
+            targetDirection = Vector3.zero;
+            currMaxSpeed = averageSpeedSpeed;
+            Debug.Log("no slope!");
         }
     }
+
+
+
 
 
     void SlideMovement()
@@ -127,12 +151,13 @@ public class PlayerControllerScript : MonoBehaviour
         }
         else
         {
-            _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, Vector3.zero, decel * Time.deltaTime);
+            _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetDirection, decel * Time.deltaTime); //if floor not flat, targetdirection should be slope!
         }
         
-
         _horizontalVelocity = Vector3.ProjectOnPlane(_horizontalVelocity, _groundNormal);
+
  
+
         Vector3 velocity;
         if (_isGrounded)
         {
@@ -163,6 +188,7 @@ public class PlayerControllerScript : MonoBehaviour
         if (_isGrounded)
         {
             _groundNormal = hitInfo.normal;
+            Debug.Log("On floor!");
         }
         else
         {
