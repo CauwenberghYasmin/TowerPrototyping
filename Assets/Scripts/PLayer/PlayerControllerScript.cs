@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -31,7 +32,7 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float currMaxSpeed = 8f;
     [SerializeField] private float accel = 12f;  
     [SerializeField] private float decel = 2f;   
-    [SerializeField] private float turnResponse = 4f;
+    [SerializeField] private float currTurnResponse = 4f;
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float gravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 0.5f;
@@ -43,6 +44,9 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float minHeightDiff = 1;
     [SerializeField] private Transform frontPointTransform;
     [SerializeField] private Transform backPointTransform;
+
+    [SerializeField] private GameObject cinemachineCamera;
+    [SerializeField] private float airControllRotation = 0.3f;
 
 
     [Header("Jumping")]
@@ -70,7 +74,15 @@ public class PlayerControllerScript : MonoBehaviour
     private Vector3 _horizontalVelocity;
     private Vector3 targetDirection = Vector3.zero;
 
-    private PlayerState _playerState;
+
+    //camera var
+    private const float normalCameraControllGain = 1f;
+    private CinemachineInputAxisController cinemaController;
+    private const float normalTurnRespons = 4f;
+    private const float slowedTurnRespons = 2f;
+
+
+
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
@@ -84,13 +96,46 @@ public class PlayerControllerScript : MonoBehaviour
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
+        cinemaController = cinemachineCamera.GetComponent<CinemachineInputAxisController>();
     }
 
     private void Update()
     {
         CheckGround();
+        ChangeRotationSpeed();
         CalculateMaxSpeedAndSlope();
         SlideMovement();
+    }
+
+
+    void ChangeRotationSpeed() //see if there is a way to optimize this! (can't access or save component parameters otherwise :/ )
+    {
+        if (_isGrounded) //more controll
+        {
+            foreach (var c in cinemaController.Controllers)
+            {
+                if (c.Name == "Look Orbit X")
+                    c.Input.Gain = normalCameraControllGain;
+
+                if (c.Name == "Look Orbit Y")
+                   c.Input.Gain = normalCameraControllGain;
+
+            }
+            currTurnResponse = normalTurnRespons;
+        }
+        else // if in air -> less air controll
+        {
+            foreach (var c in cinemaController.Controllers)
+            {
+                if (c.Name == "Look Orbit X")
+                    c.Input.Gain = airControllRotation;
+
+                if (c.Name == "Look Orbit Y")
+                    c.Input.Gain = airControllRotation;
+
+            }
+            currTurnResponse = slowedTurnRespons;
+        }
     }
 
 
@@ -146,7 +191,7 @@ public class PlayerControllerScript : MonoBehaviour
         if (_moveInput.sqrMagnitude > 0.0001f)
         {
             Vector3 targetVelocity = inputDir * currMaxSpeed;
-            _horizontalVelocity = Vector3.Lerp(_horizontalVelocity, targetVelocity, turnResponse * Time.deltaTime);
+            _horizontalVelocity = Vector3.Lerp(_horizontalVelocity, targetVelocity, currTurnResponse * Time.deltaTime);
             _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, accel * Time.deltaTime);
         }
         else
