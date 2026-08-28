@@ -34,7 +34,7 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float decel = 2f;   
     [SerializeField] private float currTurnResponse = 4f;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float gravity = -9.81f;
+    [SerializeField] private float normalGravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 0.5f;
 
     [SerializeField] private float minminSpeed = 6;
@@ -48,9 +48,14 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private GameObject cinemachineCamera;
     [SerializeField] private float airControllRotation = 0.3f;
 
+    [SerializeField] private float wallRunningGravity = -0.5f;
+
+    private Transform playerTransform;
+    private float gravity = -9.81f;
 
     [Header("Jumping")]
     [SerializeField] private float jumpHeight = 5f;
+    [SerializeField] private float wallJumpForce = 8f;
     private int currJumpCount = 0;
     private const int maxJumpAMount = 2;
 
@@ -61,6 +66,15 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float groundedStickForce = -2f; 
     private Vector3 _groundNormal = Vector3.up;
 
+    [Header("Wall Check")]
+    [SerializeField] private LayerMask wallMask;
+    [SerializeField] private float wallCheckDistance;
+    [SerializeField] private float minJumpHeight;
+
+    private RaycastHit leftWallRaycast;
+    private RaycastHit rightWallRaycast;
+    private bool leftWallHit = false;
+    private bool rightWallHit = false;
 
     private CharacterController _controller;
     public CharacterController Controller { get { return _controller; } }
@@ -81,12 +95,13 @@ public class PlayerControllerScript : MonoBehaviour
     private const float normalTurnRespons = 4f;
     private const float slowedTurnRespons = 2f;
 
+    private PlayerState playerState = PlayerState.Grounded;
 
 
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
-
+        playerTransform = GetComponent<Transform>();
         var map = inputActions.FindActionMap(actionMapName);
         _moveAction = map.FindAction(moveActionName);
         _jumpAction = map.FindAction(jumpActionName);
@@ -102,12 +117,53 @@ public class PlayerControllerScript : MonoBehaviour
     private void Update()
     {
         CheckGround();
+        CheckForWall();
+        CalculateState();
+        CalculateGravity();
         ChangeRotationSpeed();
         CalculateMaxSpeedAndSlope();
         SlideMovement();
     }
 
 
+    void CalculateState()
+    {
+        //if we enter the grounded state
+        if (_isGrounded && playerState != PlayerState.Grounded) 
+        {
+            gravity = normalGravity;
+            playerState = PlayerState.Grounded; 
+        }
+        else if (!_isGrounded)
+        {
+            //if we enter the wallrunning state
+            if ((leftWallHit || rightWallHit) && playerState != PlayerState.Wallrunning)
+            {
+                _verticalVelocity = 0;
+                currJumpCount = 0;
+                gravity = wallRunningGravity;
+                playerState = PlayerState.Wallrunning;
+            }
+            //if we enter the falling state
+            else if (!(leftWallHit || rightWallHit) && playerState != PlayerState.Falling)
+            {
+                gravity = normalGravity;
+                playerState = PlayerState.Falling;
+            }
+        }
+    }
+
+    void CalculateGravity()
+    {
+        if(!_isGrounded && (leftWallHit || rightWallHit))
+        {
+            gravity = wallRunningGravity;
+        }
+        else
+        {
+            gravity = normalGravity;
+        }
+    }
     void ChangeRotationSpeed() //see if there is a way to optimize this! (can't access or save component parameters otherwise :/ )
     {
         if (_isGrounded) //more controll
@@ -138,6 +194,27 @@ public class PlayerControllerScript : MonoBehaviour
         }
     }
 
+    private void CheckForWall()
+    {
+        //check for both left and right side wall collision
+        leftWallHit = Physics.SphereCast(
+        playerTransform.position,
+        2f,
+        -playerTransform.right,
+        out leftWallRaycast,
+        wallCheckDistance,
+        wallMask
+    );
+
+        rightWallHit = Physics.SphereCast(
+            playerTransform.position,
+            2f,
+            playerTransform.right,
+            out rightWallRaycast,
+            wallCheckDistance,
+            wallMask
+        );
+    }
 
     void CalculateMaxSpeedAndSlope()
     {
@@ -201,7 +278,12 @@ public class PlayerControllerScript : MonoBehaviour
         
         _horizontalVelocity = Vector3.ProjectOnPlane(_horizontalVelocity, _groundNormal);
 
- 
+        //stick the player to the wall if it's wallrunning
+        if (playerState == PlayerState.Wallrunning)
+        {
+            Vector3 wallNormal = leftWallHit ? leftWallRaycast.normal : rightWallRaycast.normal;
+            _horizontalVelocity = Vector3.ProjectOnPlane(_horizontalVelocity, wallNormal);
+        }
 
         Vector3 velocity;
         if (_isGrounded)
@@ -278,6 +360,21 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void OnJumpPerformed(InputAction.CallbackContext ctx)
     {
+        if(playerState == PlayerState.Wallrunning)
+        {
+            Vector3 wallNormal = leftWallHit ? leftWallRaycast.normal : rightWallRaycast.normal;
+
+            //use normal gravity as gravity during wallrunning is really low
+            float effectiveGravity = normalGravity / gravityMultiplier;
+            _verticalVelocity = Mathf.Sqrt(-2f * jumpHeight * effectiveGravity);
+
+            // push horizontally away from the wall
+            _horizontalVelocity += wallNormal * wallJumpForce;
+
+            gravity = normalGravity;
+            playerState = PlayerState.Falling;
+            currJumpCount = 1;
+        }
         if (_isGrounded || currJumpCount < (maxJumpAMount -1))
         {
             float effectiveGravity = gravity / gravityMultiplier;
