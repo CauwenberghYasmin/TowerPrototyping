@@ -3,6 +3,9 @@ using Unity.Cinemachine;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
+using UnityEditor;
+using UnityEngine.Rendering;
+
 
 enum PlayerState
 {
@@ -381,4 +384,41 @@ public class PlayerControllerScript : MonoBehaviour
             ++currJumpCount;
         }
     }
+    
+
+    private void OnDrawGizmos()
+    {
+        var prevzTest = Handles.zTest;
+        Handles.zTest = CompareFunction.Always; 
+        
+        Vector3 pos = transform.position;
+        const float offset = 2f; 
+        
+        // yellow shows what checkground reads!!!
+        Handles.color = _isGrounded ? Color.yellow : Color.gray;
+        Handles.DrawLine(pos , pos + _groundNormal * offset);
+
+        //horizontal velocity 
+        Handles.color = Color.cyan;
+        Handles.DrawLine(pos ,pos + _horizontalVelocity);
+        
+        // Slide targetDirection
+        Handles.color = Color.magenta;
+        Handles.DrawLine(pos, pos + targetDirection * 2f);
+        
+        // wall checks (red no hit green obv hit)
+        float castOffset = wallCheckRadius + 0.1f;
+        Vector3 leftOrigin = pos + transform.right * castOffset;
+        Vector3 rightOrigin = pos - transform.right * castOffset;
+
+        Handles.color = leftWallHit ? Color.red : Color.green;
+        Handles.DrawLine(leftOrigin, leftOrigin - transform.right * (wallCheckDistance + castOffset));
+
+        Handles.color = rightWallHit ? Color.red : Color.green;
+        Handles.DrawLine(rightOrigin, rightOrigin + transform.right * (wallCheckDistance + castOffset));
+        
+        Handles.zTest = prevzTest;
+    }
+
 }
+
