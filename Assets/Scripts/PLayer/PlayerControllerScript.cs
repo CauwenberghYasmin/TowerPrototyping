@@ -76,7 +76,10 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float wallStickForce = 3f;
     //how much the player needs to move forward (input wise) to start wallrunning
     [SerializeField] private float minForwardInputToWallRun = 0.25f;
-
+    //cooldown for when you jump off a wall
+    [SerializeField] private float wallJumpCooldown = 0.5f;
+    private float wallJumpCooldownTimer = 0f;
+    
     private float _groundDistance = Mathf.Infinity;
 
     private RaycastHit leftWallRaycast;
@@ -127,6 +130,10 @@ public class PlayerControllerScript : MonoBehaviour
         ChangeRotationSpeed();
         CalculateMaxSpeedAndSlope();
         SlideMovement();
+        
+        if (wallJumpCooldownTimer > 0f)
+            wallJumpCooldownTimer -= Time.deltaTime;
+        
     }
 
     void CalculateState()
@@ -142,7 +149,7 @@ public class PlayerControllerScript : MonoBehaviour
         }
 
         // not grounded from here on
-        bool wallAvailable = leftWallHit || rightWallHit;
+        bool wallAvailable = (leftWallHit || rightWallHit)  && wallJumpCooldownTimer <= 0f;
         //is the player pressing forward
         bool hasForwardInput = _moveInput.y > minForwardInputToWallRun;
         //is the player high enough above the ground
@@ -363,6 +370,7 @@ public class PlayerControllerScript : MonoBehaviour
             gravity = normalGravity;
             playerState = PlayerState.Falling;
             currJumpCount = 1;
+            wallJumpCooldownTimer = wallJumpCooldown; // reset :p 
             return;
         }
 
