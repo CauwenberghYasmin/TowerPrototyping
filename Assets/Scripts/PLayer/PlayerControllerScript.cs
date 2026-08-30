@@ -39,6 +39,7 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float minminSpeed = 6;
     [SerializeField] private float averageSpeedSpeed = 10;
     [SerializeField] private float speedMulitplier = 14;
+    [SerializeField] private float restTargetDirection = 7f;
 
     [SerializeField] private float minHeightDiff = 1;
     [SerializeField] private Transform frontPointTransform;
@@ -235,8 +236,9 @@ public class PlayerControllerScript : MonoBehaviour
         }
         else if (heightDifference > minHeightDiff && _isGrounded)
         {
-            targetDirection = Vector3.forward;
+            targetDirection += Vector3.forward * Time.deltaTime * restTargetDirection;
             currMaxSpeed += speedMulitplier * Time.deltaTime;
+            _horizontalVelocity += Vector3.forward * Time.deltaTime * restTargetDirection;
         }
         else
         {
