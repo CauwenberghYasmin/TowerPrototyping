@@ -277,7 +277,8 @@ public class PlayerControllerScript : MonoBehaviour
         {
             velocity = _horizontalVelocity + Vector3.down * 0.1f;
             velocity.y += _verticalVelocity;
-            currJumpCount = 0;
+            if (_verticalVelocity <= 0f)
+                currJumpCount = 0;
         }
         else
         {
@@ -377,7 +378,7 @@ public class PlayerControllerScript : MonoBehaviour
             return;
         }
 
-        if (_isGrounded || currJumpCount < (maxJumpAMount - 1))
+        if (_isGrounded || currJumpCount < maxJumpAMount)
         {
             float effectiveGravity = gravity / gravityMultiplier;
             _verticalVelocity = Mathf.Sqrt(-2f * jumpHeight * effectiveGravity);
