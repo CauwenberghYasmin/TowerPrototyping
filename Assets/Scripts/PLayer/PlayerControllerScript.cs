@@ -30,18 +30,17 @@ public class PlayerControllerScript : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float currMaxSpeed = 8f;
     [SerializeField] private float accel = 12f;
-    [SerializeField] private float decel = 2f;
+    [SerializeField] private float friction = 3f;
     [SerializeField] private float currTurnResponse = 4f;
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float normalTurnRespons = 4f;
+    [SerializeField] private float slowedTurnRespons = 2f;
     [SerializeField] private float normalGravity = -9.81f;
     [SerializeField] private float gravityMultiplier = 0.5f;
 
-    [SerializeField] private float minminSpeed = 6;
-    [SerializeField] private float averageSpeedSpeed = 10;
-    [SerializeField] private float speedMulitplier = 14;
-    [SerializeField] private float restTargetDirection = 7f;
+    [SerializeField] private float turnRateDegPerSec = 360f;   // how fast heading rotates toward input
+    [SerializeField] private float slopeAccelStrength = 20f;    // how hard slopes accelerate you
+    [SerializeField] private float groundNormalSmoothSpeed = 10f;
 
-    [SerializeField] private float minHeightDiff = 1;
     [SerializeField] private Transform frontPointTransform;
     [SerializeField] private Transform backPointTransform;
 
@@ -78,8 +77,8 @@ public class PlayerControllerScript : MonoBehaviour
     [SerializeField] private float wallRunAccel = 15f;
     //how hard the player keeps getting pushed into the wall while wallrunning
     [SerializeField] private float wallStickForce = 3f;
-    //how much the player needs to move forward (input wise) to start wallrunning
-    [SerializeField] private float minForwardInputToWallRun = 0.25f;
+    //how much the player needs to move forward (input wise) to start wallrunning (deadzone)
+    private float minForwardInputToWallRun = 0.25f;
     //cooldown for when you jump off a wall
     [SerializeField] private float wallJumpCooldown = 0.5f;
     private float wallJumpCooldownTimer = 0f;
@@ -106,8 +105,6 @@ public class PlayerControllerScript : MonoBehaviour
     //camera var
     private const float normalCameraControllGain = 1f;
     private CinemachineInputAxisController cinemaController;
-    private const float normalTurnRespons = 4f;
-    private const float slowedTurnRespons = 2f;
 
     private PlayerState playerState = PlayerState.Grounded;
 
@@ -132,7 +129,6 @@ public class PlayerControllerScript : MonoBehaviour
         CheckForWall();
         CalculateState();
         ChangeRotationSpeed();
-        CalculateMaxSpeedAndSlope();
         SlideMovement();
         
         if (wallJumpCooldownTimer > 0f)
@@ -142,8 +138,10 @@ public class PlayerControllerScript : MonoBehaviour
 
     void CalculateState()
     {
+        //if we're grounded
         if (_isGrounded)
         {
+            //if we're not already in the grounded state, we enter it
             if (playerState != PlayerState.Grounded)
             {
                 gravity = normalGravity;
@@ -152,14 +150,16 @@ public class PlayerControllerScript : MonoBehaviour
             return;
         }
 
-        // not grounded from here on
+        //not grounded from here on
+
+        //are we hitting a wall
         bool wallAvailable = (leftWallHit || rightWallHit)  && wallJumpCooldownTimer <= 0f;
         //is the player pressing forward
         bool hasForwardInput = _moveInput.y > minForwardInputToWallRun;
         //is the player high enough above the ground
         bool highEnough = _groundDistance > minJumpHeight;
 
-        // we start wallrunning
+        //we start wallrunning if we're hitting a wall, we're trying to move forward and we're high enough above the ground
         if (wallAvailable && hasForwardInput && highEnough)
         {
             _verticalVelocity = 0f;
@@ -167,6 +167,7 @@ public class PlayerControllerScript : MonoBehaviour
             gravity = wallRunningGravity;
             playerState = PlayerState.Wallrunning;
         }
+        //in this case we're supposed to be in the falling state so now we just check if we need to enter it or not
         else if (playerState != PlayerState.Falling)
         {
             gravity = normalGravity;
@@ -215,70 +216,54 @@ public class PlayerControllerScript : MonoBehaviour
         );
     }
 
-    void CalculateMaxSpeedAndSlope()
-    {
-        Vector3 origin = frontPointTransform.position + Vector3.up;
-        Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
-            out RaycastHit hitInfo, groundCheckOffset + 20, groundMask);
-        float frontPointDistance = hitInfo.distance;
-
-        origin = backPointTransform.position + Vector3.up;
-        Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
-            out RaycastHit hitInfo2, groundCheckOffset + 20, groundMask);
-        float backPOintDistance = hitInfo2.distance;
-
-        double heightDifference = frontPointDistance - backPOintDistance;
-
-        if (heightDifference < -minHeightDiff && _isGrounded)
-        {
-            targetDirection = Vector3.back;
-            currMaxSpeed = minminSpeed;
-        }
-        else if (heightDifference > minHeightDiff && _isGrounded)
-        {
-            targetDirection += Vector3.forward * Time.deltaTime * restTargetDirection;
-            currMaxSpeed += speedMulitplier * Time.deltaTime;
-            _horizontalVelocity += Vector3.forward * Time.deltaTime * restTargetDirection;
-        }
-        else
-        {
-            targetDirection = Vector3.zero;
-
-            if(currMaxSpeed > averageSpeedSpeed) //slow down so the player doesn't immediatly lose speed buildup in the air
-            {
-                currMaxSpeed -= speedMulitplier * Time.deltaTime;
-            }
-            else
-            {
-                currMaxSpeed = averageSpeedSpeed;
-            }
-        }
-    }
-
     void SlideMovement()
     {
+        //apply gravity to vertical movement
         _verticalVelocity += (gravity / gravityMultiplier) * Time.deltaTime;
 
+        //if we're wallrunning
         if (playerState == PlayerState.Wallrunning)
         {
             WallRunMovement();
         }
         else
         {
+            //check direction player is looking
             Vector3 moveDir = playerRotation.GetMoveDirection(_moveInput);
+            //get the input direction the player gave
             Vector3 inputDir = Vector3.ProjectOnPlane(moveDir, _groundNormal).normalized;
-
+            //if the player pressed an input
             if (_moveInput.sqrMagnitude > 0.0001f)
             {
-                Vector3 targetVelocity = inputDir * currMaxSpeed;
-                _horizontalVelocity = Vector3.Lerp(_horizontalVelocity, targetVelocity, currTurnResponse * Time.deltaTime);
-                _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, accel * Time.deltaTime);
+                float currentSpeed = _horizontalVelocity.magnitude;
+                Vector3 currentDir = currentSpeed > 0.01f ? _horizontalVelocity.normalized : inputDir;
+
+                //rotate towards the input direction
+                Vector3 newDir = Vector3.RotateTowards(
+                    currentDir, inputDir,
+                    turnRateDegPerSec * Mathf.Deg2Rad * Time.deltaTime, 0f);
+
+                float newSpeed = Mathf.MoveTowards(currentSpeed, currMaxSpeed, accel * Time.deltaTime);
+
+                //apply new velocity
+                _horizontalVelocity = newDir * newSpeed;
             }
             else
             {
-                _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetDirection, decel * Time.deltaTime);
+                _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, Vector3.zero, friction * Time.deltaTime);
             }
 
+            //slope acceleration
+            if (_isGrounded)
+            {
+                Vector3 downhill = Vector3.ProjectOnPlane(Vector3.down, _groundNormal);
+                
+                Vector3 alongSkate = Vector3.Project(downhill, transform.forward);
+
+                _horizontalVelocity += alongSkate * slopeAccelStrength * Time.deltaTime;
+            }
+
+            //projects on plane (stays the same if already perpendicular
             _horizontalVelocity = Vector3.ProjectOnPlane(_horizontalVelocity, _groundNormal);
         }
 
@@ -300,6 +285,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     void WallRunMovement()
     {
+        //get wall normal
         Vector3 wallNormal = leftWallHit ? leftWallRaycast.normal : rightWallRaycast.normal;
 
         // direction along the wall's surface that matches where the player is facing
@@ -309,6 +295,7 @@ public class PlayerControllerScript : MonoBehaviour
         if (Vector3.Dot(wallForward, playerTransform.forward) < 0f)
             wallForward = -wallForward;
 
+        //convert the velocity to one that matches the wall's forward capped at the accel speed
         Vector3 targetVelocity = wallForward * wallRunSpeed;
         _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, wallRunAccel * Time.deltaTime);
 
@@ -321,26 +308,30 @@ public class PlayerControllerScript : MonoBehaviour
 
     void CheckGround()
     {
+        //player origin
         Vector3 origin = transform.position + Vector3.up;
 
+        //check if we're hitting the ground
         _isGrounded = Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
             out RaycastHit hitInfo, groundCheckOffset, groundMask);
 
-        // separate, longer-range cast just to know how far off the ground we are (for wallrun gating)
+        // separate, longer-range cast just to know how far off the ground we are
         if (Physics.Raycast(origin, Vector3.down, out RaycastHit groundDistHit, 100f, groundMask))
             _groundDistance = groundDistHit.distance - 1f; // subtract the Vector3.up offset added to origin
         else
             _groundDistance = Mathf.Infinity;
 
+        //let ground normal to make curved slopes smoother
         if (_isGrounded)
         {
-            _groundNormal = hitInfo.normal;
+            _groundNormal = Vector3.Slerp(_groundNormal, hitInfo.normal, groundNormalSmoothSpeed * Time.deltaTime);
         }
         else
         {
-            _groundNormal = Vector3.up;
+            _groundNormal = Vector3.Slerp(_groundNormal, Vector3.up, groundNormalSmoothSpeed * Time.deltaTime);
         }
 
+        //if we're grounded, apply the grounded stickforce
         if (_isGrounded && _verticalVelocity < 0f)
         {
             _verticalVelocity = groundedStickForce;
@@ -349,6 +340,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void OnEnable()
     {
+        //enable move and jump action and subscribe to it
         _moveAction.Enable();
         _moveAction.performed += OnMovePerformed;
         _moveAction.canceled += OnMoveCanceled;
@@ -359,6 +351,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void OnDisable()
     {
+        //unsub from the move and jumpaction and disable them
         _moveAction.performed -= OnMovePerformed;
         _moveAction.canceled -= OnMoveCanceled;
         _moveAction.Disable();

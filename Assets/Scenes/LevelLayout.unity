@@ -864,8 +864,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      propertyPath: speedMulitplier
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
       propertyPath: wallMask.m_Bits
       value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      propertyPath: currTurnResponse
+      value: 1.42
       objectReference: {fileID: 0}
     - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
       propertyPath: cinemachineCamera
