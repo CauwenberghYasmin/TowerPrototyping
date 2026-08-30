@@ -107,6 +107,10 @@ public class PlayerControllerScript : MonoBehaviour
     private CinemachineInputAxisController cinemaController;
 
     private PlayerState playerState = PlayerState.Grounded;
+    
+    public bool IsWallrunning => playerState == PlayerState.Wallrunning;
+    public bool IsOnLeftWall => leftWallHit;
+    
 
     private void Awake()
     {
@@ -130,7 +134,7 @@ public class PlayerControllerScript : MonoBehaviour
         CalculateState();
         ChangeRotationSpeed();
         SlideMovement();
-        
+
         if (wallJumpCooldownTimer > 0f)
             wallJumpCooldownTimer -= Time.deltaTime;
         
@@ -423,6 +427,8 @@ public class PlayerControllerScript : MonoBehaviour
         
         Handles.zTest = prevzTest;
     }
+
+    
 
 }
 
