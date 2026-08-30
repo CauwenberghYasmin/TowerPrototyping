@@ -241,7 +241,15 @@ public class PlayerControllerScript : MonoBehaviour
         else
         {
             targetDirection = Vector3.zero;
-            currMaxSpeed = averageSpeedSpeed;
+
+            if(currMaxSpeed > averageSpeedSpeed) //slow down so the player doesn't immediatly lose speed buildup in the air
+            {
+                currMaxSpeed -= speedMulitplier * Time.deltaTime;
+            }
+            else
+            {
+                currMaxSpeed = averageSpeedSpeed;
+            }
         }
     }
 
