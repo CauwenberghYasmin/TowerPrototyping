@@ -110,6 +110,10 @@ public class PlayerControllerScript : MonoBehaviour
     private const float slowedTurnRespons = 2f;
 
     private PlayerState playerState = PlayerState.Grounded;
+    
+    public bool IsWallrunning => playerState == PlayerState.Wallrunning;
+    public bool IsOnLeftWall => leftWallHit;
+    
 
     private void Awake()
     {
@@ -134,7 +138,7 @@ public class PlayerControllerScript : MonoBehaviour
         ChangeRotationSpeed();
         CalculateMaxSpeedAndSlope();
         SlideMovement();
-        
+
         if (wallJumpCooldownTimer > 0f)
             wallJumpCooldownTimer -= Time.deltaTime;
         
@@ -430,6 +434,8 @@ public class PlayerControllerScript : MonoBehaviour
         
         Handles.zTest = prevzTest;
     }
+
+    
 
 }
 
