@@ -30,9 +30,9 @@ public class PlayerVisualRotate : MonoBehaviour
             tilt = Quaternion.Euler(0f, 0f, sign * wallRunTiltAngle);
         }
 
-        foreach (var t in meshTransforms)
+        foreach (Transform t in meshTransforms)
         {
-            if (t == null) continue;
+            if (!t) continue;
             t.localRotation = tilt;
         }
     }
