@@ -9,10 +9,12 @@ public class RevivalPlayer : MonoBehaviour
     private int currIndex = 0;
     private Vector3 playerPos;
     private PlayerControllerScript playerControllerScript;
+    private CharacterController cr;
 
     void Start()
     {
         playerControllerScript = GetComponent<PlayerControllerScript>();
+        cr = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
@@ -23,8 +25,10 @@ public class RevivalPlayer : MonoBehaviour
 
         if (playerPos.y < reviveDepth)
         {
+            cr.enabled = false;
             transform.position = spawnpoints[currIndex].position;
             playerControllerScript.PlayerReset();
+            cr.enabled = true;
         }
 
 
