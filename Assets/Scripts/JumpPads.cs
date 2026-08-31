@@ -4,15 +4,14 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class JumpPads : MonoBehaviour
 {
-    public float launchVelocity = 50f;
  
     private void OnTriggerEnter(Collider other)
-    {
-        
+    {        
         PlayerControllerScript player = other.GetComponent<PlayerControllerScript>();
         if (!player) return;
+ 
+        player.AddVerticalVelocity(-2f * player.VerticalVelocity);
 
-        player.AddVerticalVelocity(launchVelocity);
     }
  
     private void OnDrawGizmos()

@@ -99,6 +99,7 @@ public class PlayerControllerScript : MonoBehaviour
     private Vector2 _moveInput;
     private bool _isGrounded;
     private float _verticalVelocity;
+    public float VerticalVelocity => _verticalVelocity;
     private Vector3 _horizontalVelocity;
     private Vector3 targetDirection = Vector3.zero;
 
