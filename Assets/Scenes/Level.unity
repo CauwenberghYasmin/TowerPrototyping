@@ -1396,13 +1396,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 355295325}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.59944123, w: 0.80041873}
-  m_LocalPosition: {x: 21.22, y: -18.5, z: 285.2}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: 25.63, y: -11.38, z: 285.2}
   m_LocalScale: {x: 15.1307745, y: 1.2519898, z: 29.046497}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1131466436}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 73.66}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!65 &355295327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4432,7 +4432,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 18.18, y: -18.36, z: 182.9}
-  m_LocalScale: {x: 15.1307745, y: 1.2519898, z: 21.28622}
+  m_LocalScale: {x: 15.1307745, y: 1.2519898, z: 57.702686}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1131466436}
@@ -4592,9 +4592,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1271705265}
     - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      propertyPath: accel
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      propertyPath: friction
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
       propertyPath: cinemachineCamera
       value: 
       objectReference: {fileID: 1129465247}
+    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      propertyPath: groundedStickForce
+      value: -20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      propertyPath: slopeAccelStrength
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
+      propertyPath: groundNormalSmoothSpeed
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

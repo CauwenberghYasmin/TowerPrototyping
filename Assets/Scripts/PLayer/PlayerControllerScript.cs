@@ -259,7 +259,8 @@ public class PlayerControllerScript : MonoBehaviour
                     turnRateDegPerSec * Mathf.Deg2Rad * Time.deltaTime, 0f);
 
                 float newSpeed = Mathf.MoveTowards(currentSpeed, currMaxSpeed, accel * Time.deltaTime);
-
+                //to make sure speed is not lost
+                if (currentSpeed > currMaxSpeed) newSpeed = currentSpeed;
                 //apply new velocity
                 _horizontalVelocity = newDir * newSpeed;
             }
@@ -311,8 +312,11 @@ public class PlayerControllerScript : MonoBehaviour
         if (Vector3.Dot(wallForward, playerTransform.forward) < 0f)
             wallForward = -wallForward;
 
+        //make sure we dont lose speed on walls
+        float currentSpeed = _horizontalVelocity.magnitude;
+        float newSpeed = wallRunSpeed < currentSpeed ? wallRunSpeed : currentSpeed;
         //convert the velocity to one that matches the wall's forward capped at the accel speed
-        Vector3 targetVelocity = wallForward * wallRunSpeed;
+        Vector3 targetVelocity = wallForward * newSpeed;
         _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, targetVelocity, wallRunAccel * Time.deltaTime);
 
         // keep velocity flat against the wall plane
