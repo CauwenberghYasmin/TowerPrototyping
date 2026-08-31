@@ -8,9 +8,11 @@ public class RevivalPlayer : MonoBehaviour
 
     private int currIndex = 0;
     private Vector3 playerPos;
+    private PlayerControllerScript playerControllerScript;
 
     void Start()
     {
+        playerControllerScript = GetComponent<PlayerControllerScript>();
     }
 
     // Update is called once per frame
@@ -22,12 +24,12 @@ public class RevivalPlayer : MonoBehaviour
         if (playerPos.y < reviveDepth)
         {
             transform.position = spawnpoints[currIndex].position;
-
+            playerControllerScript.PlayerReset();
         }
 
 
 
-        if (playerPos.z > spawnpoints[currIndex+1].position.z)  //this works cause rn the map is a super long line!
+        if (playerPos.z > spawnpoints[currIndex+1].position.z && currIndex < spawnpoints.Length )  //this works cause rn the map is a super long line!
         {
             ++currIndex;
         }

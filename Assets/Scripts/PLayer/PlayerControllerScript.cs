@@ -140,6 +140,17 @@ public class PlayerControllerScript : MonoBehaviour
         
     }
 
+    public void PlayerReset()
+    {
+        currJumpCount = 0;
+        _horizontalVelocity = Vector3.zero;
+        playerState = PlayerState.Grounded;
+        _verticalVelocity = 0f;
+        targetDirection = Vector3.zero;
+    }
+
+
+
     void CalculateState()
     {
         //if we're grounded
