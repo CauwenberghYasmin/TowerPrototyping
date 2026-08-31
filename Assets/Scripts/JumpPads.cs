@@ -10,7 +10,7 @@ public class JumpPads : MonoBehaviour
         PlayerControllerScript player = other.GetComponent<PlayerControllerScript>();
         if (!player) return;
  
-        player.AddVerticalVelocity(-128f * player.VerticalVelocity);
+        player.AddVerticalVelocity(-3f * player.VerticalVelocity);
 
     }
  
