@@ -9,6 +9,10 @@ public class BoundsEnforcement : MonoBehaviour
         var controllerScript = other.GetComponent<PlayerControllerScript>();
         if (controllerScript == null) return;
         controllerScript.CancelVelocity();
+        
+        var cc = controllerScript.Controller;
+        cc.enabled = false;
         other.gameObject.transform.position = respawnPoint.transform.position;
+        cc.enabled = true;
     }
 }
