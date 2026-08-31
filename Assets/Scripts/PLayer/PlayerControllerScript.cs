@@ -254,6 +254,7 @@ public class PlayerControllerScript : MonoBehaviour
             }
             else
             {
+            
                 _horizontalVelocity = Vector3.MoveTowards(_horizontalVelocity, Vector3.zero, friction * Time.deltaTime);
             }
 
@@ -268,7 +269,7 @@ public class PlayerControllerScript : MonoBehaviour
             }
 
             //projects on plane (stays the same if already perpendicular
-            _horizontalVelocity = Vector3.ProjectOnPlane(_horizontalVelocity, _groundNormal);
+            //_horizontalVelocity = Vector3.ProjectOnPlane(_horizontalVelocity, _groundNormal);
         }
 
         Vector3 velocity;
