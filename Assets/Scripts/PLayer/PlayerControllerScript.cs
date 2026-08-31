@@ -408,6 +408,11 @@ public class PlayerControllerScript : MonoBehaviour
             ++currJumpCount;
         }
     }
+    //for the jumppads
+    public void AddVerticalVelocity(float value)
+    {
+        _verticalVelocity += value;
+    }
     
 
     private void OnDrawGizmos()
