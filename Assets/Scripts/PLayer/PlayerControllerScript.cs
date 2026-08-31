@@ -315,10 +315,14 @@ public class PlayerControllerScript : MonoBehaviour
         //player origin
         Vector3 origin = transform.position + Vector3.up;
 
+        //this scales based off of our speed 
+        float speedScale = Mathf.Max(_horizontalVelocity.magnitude, Mathf.Abs(_verticalVelocity)) * Time.deltaTime;
+        float checkDist = groundCheckOffset + speedScale + 0.1f; 
+        
         //check if we're hitting the ground
         _isGrounded = Physics.SphereCast(origin, groundCheckRadius, Vector3.down,
-            out RaycastHit hitInfo, groundCheckOffset, groundMask);
-
+            out RaycastHit hitInfo, checkDist, groundMask);
+        
         // separate, longer-range cast just to know how far off the ground we are
         if (Physics.Raycast(origin, Vector3.down, out RaycastHit groundDistHit, 100f, groundMask))
             _groundDistance = groundDistHit.distance - 1f; // subtract the Vector3.up offset added to origin
