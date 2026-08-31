@@ -2470,7 +2470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d05f80d492999344da7946971ec673c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::JumpPads
-  launchVelocity: 100
+  jumpPower: 40
 --- !u!1 &1081164692
 GameObject:
   m_ObjectHideFlags: 0

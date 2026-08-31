@@ -4,13 +4,13 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class JumpPads : MonoBehaviour
 {
- 
+    [SerializeField] private float jumpPower = 128f;
     private void OnTriggerEnter(Collider other)
     {        
         PlayerControllerScript player = other.GetComponent<PlayerControllerScript>();
         if (!player) return;
  
-        player.AddVerticalVelocity(-128f * player.VerticalVelocity);
+        player.AddVerticalVelocity(jumpPower);
 
     }
  
