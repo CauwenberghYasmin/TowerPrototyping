@@ -157,6 +157,9 @@ GameObject:
   - component: {fileID: 6843204329374184516}
   - component: {fileID: 7629619368498387524}
   - component: {fileID: 526749474574059042}
+  - component: {fileID: 3527821371494344025}
+  - component: {fileID: 5942669821734353445}
+  - component: {fileID: 554291121185593364}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -240,7 +243,7 @@ MonoBehaviour:
   backPointTransform: {fileID: 1839589018911140704}
   cinemachineCamera: {fileID: 0}
   airControllRotation: 0.7
-  wallRunningGravity: -0.5
+  wallRunningGravity: -1.01
   jumpHeight: 4
   wallJumpForce: 8
   groundCheckOffset: 1
@@ -273,6 +276,62 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRotation
   cameraTransform: {fileID: 0}
   rotationSmoothTime: 0.1
+--- !u!114 &3527821371494344025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285311626328240849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ebbf4d9748cbe44e84aab722ac0ff67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RevivalPlayer
+  reviveDepth: -25
+  spawnpoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &5942669821734353445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285311626328240849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c719966e0faf4f74e812bb60dacdb5b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerWallRunning
+  _wallMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _groundMask:
+    serializedVersion: 2
+    m_Bits: 0
+  _wallRunForce: 13
+  _maxWallRunTime: 5.75
+  _wallCheckDistance: 0.41
+  _minJumpHeight: 0.61
+--- !u!114 &554291121185593364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285311626328240849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb5890524c6b23a4bac9a63d4a38ace4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerVisualRotate
+  player: {fileID: 7629619368498387524}
+  meshTransforms:
+  - {fileID: 1716625254091256760}
+  wallRunTiltAngle: 30
 --- !u!1 &1819319604087339245
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,10 +29,12 @@ public class RevivalPlayer : MonoBehaviour
 
 
 
-        if (playerPos.z > spawnpoints[currIndex+1].position.z && currIndex < spawnpoints.Length )  //this works cause rn the map is a super long line!
+        if (currIndex < spawnpoints.Length-1)
         {
-            ++currIndex;
+            if (playerPos.z > spawnpoints[currIndex+1].position.z)  //this works cause rn the map is a super long line!
+            {
+                ++currIndex;
+            }
         }
-
     }
 }
