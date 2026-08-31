@@ -232,6 +232,10 @@ public class PlayerControllerScript : MonoBehaviour
         );
     }
 
+    public float GetSpeed()
+    {
+        return _horizontalVelocity.magnitude;
+    }
     void SlideMovement()
     {
         //apply gravity to vertical movement
