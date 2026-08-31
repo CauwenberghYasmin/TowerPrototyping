@@ -234,8 +234,8 @@ MonoBehaviour:
   normalGravity: -9.81
   gravityMultiplier: 0.3
   turnRateDegPerSec: 360
-  slopeAccelStrength: 20
-  groundNormalSmoothSpeed: 10
+  slopeAccelStrength: 40
+  groundNormalSmoothSpeed: 20
   frontPointTransform: {fileID: 6389924714855398005}
   backPointTransform: {fileID: 1839589018911140704}
   cinemachineCamera: {fileID: 0}
@@ -256,7 +256,7 @@ MonoBehaviour:
   wallCheckRadius: 0.3
   minJumpHeight: 1.5
   wallRunSpeed: 9
-  wallRunAccel: 15
+  wallRunAccel: 20
   wallStickForce: 3
   wallJumpCooldown: 0.5
 --- !u!114 &526749474574059042
