@@ -112,7 +112,11 @@ public class PlayerControllerScript : MonoBehaviour
     public bool IsWallrunning => playerState == PlayerState.Wallrunning;
     public bool IsOnLeftWall => leftWallHit;
     
-
+    public void CancelVelocity()
+    {
+        _horizontalVelocity = Vector3.zero;
+        _verticalVelocity = 0f;
+    }
     private void Awake()
     {
         _controller = GetComponent<CharacterController>();
