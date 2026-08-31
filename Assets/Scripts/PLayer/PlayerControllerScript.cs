@@ -305,6 +305,14 @@ public class PlayerControllerScript : MonoBehaviour
         _controller.Move(velocity * Time.deltaTime);
     }
 
+
+    public void SlowPlayerDown()
+    {
+        _horizontalVelocity /= 5;
+        _verticalVelocity /= 5;
+    }
+
+
     void WallRunMovement()
     {
         //get wall normal

@@ -30,15 +30,5 @@ public class RevivalPlayer : MonoBehaviour
             playerControllerScript.PlayerReset();
             cr.enabled = true;
         }
-
-
-
-        if (currIndex < spawnpoints.Length-1)
-        {
-            if (playerPos.z > spawnpoints[currIndex+1].position.z)  //this works cause rn the map is a super long line!
-            {
-                ++currIndex;
-            }
-        }
     }
 }
