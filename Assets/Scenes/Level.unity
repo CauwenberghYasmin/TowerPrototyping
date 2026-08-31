@@ -3228,7 +3228,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 18.235878, y: -20.84}
+  m_AnchoredPosition: {x: 18.235878, y: -24}
   m_SizeDelta: {x: 20, y: 5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1100464670
@@ -4722,69 +4722,13 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3527821371494344025, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: reviveDepth
-      value: -132.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 3527821371494344025, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
       propertyPath: 'spawnpoints.Array.data[0]'
       value: 
       objectReference: {fileID: 309031117}
-    - target: {fileID: 3527821371494344025, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: 'spawnpoints.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3527821371494344025, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: 'spawnpoints.Array.data[2]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 3527821371494344025, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: 'spawnpoints.Array.data[3]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: accel
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: friction
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: currMaxSpeed
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: wallRunAccel
-      value: 35.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: wallRunSpeed
-      value: 51.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: currTurnResponse
-      value: 0.8
-      objectReference: {fileID: 0}
     - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
       propertyPath: cinemachineCamera
       value: 
       objectReference: {fileID: 1129465247}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: normalTurnRespons
-      value: 3.04
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: groundedStickForce
-      value: -20
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: slopeAccelStrength
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 7629619368498387524, guid: 11d95fd1ed001e44489bbf0d129aaf16, type: 3}
-      propertyPath: groundNormalSmoothSpeed
-      value: 30
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
