@@ -3,7 +3,9 @@ using Unity.Cinemachine;
 using UnityEngine.InputSystem;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine.Rendering;
 
 
@@ -438,6 +440,7 @@ public class PlayerControllerScript : MonoBehaviour
 
     private void OnDrawGizmos()
     {
+#if UNITY_EDITOR
         var prevzTest = Handles.zTest;
         Handles.zTest = CompareFunction.Always; 
         
@@ -468,6 +471,7 @@ public class PlayerControllerScript : MonoBehaviour
         Handles.DrawLine(rightOrigin, rightOrigin + transform.right * (wallCheckDistance + castOffset));
         
         Handles.zTest = prevzTest;
+#endif
     }
 
     
