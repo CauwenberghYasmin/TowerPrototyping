@@ -1021,7 +1021,7 @@ Transform:
   m_GameObject: {fileID: 44162034}
   serializedVersion: 2
   m_LocalRotation: {x: 0.13620672, y: -0, z: -0, w: 0.99068046}
-  m_LocalPosition: {x: 35.6, y: -160.8, z: 975.7}
+  m_LocalPosition: {x: 35.6, y: -149.3, z: 978.9}
   m_LocalScale: {x: 0.6491781, y: 1.9150491, z: 2.0187273}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1054,11 +1054,11 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 582896975}
 --- !u!33 &44162038
@@ -4794,11 +4794,11 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1238473877}
 --- !u!33 &214764824
